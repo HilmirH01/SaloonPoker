@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Saloon Poker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Luckiest+Guy&family=Rye&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Suit shapes, reused by every card. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="suit-h" viewBox="0 0 100 100"><path d="M50 90 C12 58 4 34 22 17 C36 5 50 16 50 30 C50 16 64 5 78 17 C96 34 88 58 50 90 Z"/></symbol>
+      <symbol id="suit-d" viewBox="0 0 100 100"><path d="M50 6 Q68 32 88 50 Q68 68 50 94 Q32 68 12 50 Q32 32 50 6 Z"/></symbol>
+      <symbol id="suit-s" viewBox="0 0 100 100"><path d="M50 6 C42 24 10 40 10 62 C10 80 32 84 44 70 C42 82 38 90 30 95 L70 95 C62 90 58 82 56 70 C68 84 90 80 90 62 C90 40 58 24 50 6 Z"/></symbol>
+      <symbol id="suit-c" viewBox="0 0 100 100"><circle cx="50" cy="28" r="20"/><circle cx="28" cy="58" r="20"/><circle cx="72" cy="58" r="20"/><path d="M44 50 L56 50 C56 78 62 90 70 95 L30 95 C38 90 44 78 44 50 Z"/></symbol>
+    </defs>
+  </svg>
+
+  <div id="viewport">
+    <div id="stage">
+
+      <!-- ============================================================ main menu -->
+      <section id="screen-menu" class="screen" hidden>
+        <div class="scene" id="menu-scene"></div>
+        <div class="menu-shade"></div>
+        <div class="menu-title">
+          <h1>Saloon Poker</h1>
+          <p>A Wild West poker journey</p>
+        </div>
+        <div class="menu-buttons">
+          <button class="btn btn-next" id="btn-continue" type="button" hidden><span class="lbl">Continue journey</span></button>
+          <button class="btn btn-next" id="btn-begin" type="button"><span class="lbl">Begin journey</span></button>
+        </div>
+        <p class="menu-foot">Win at every saloon in town to become the champion of the West.</p>
+
+        <div id="create" class="overlay" hidden>
+          <div class="panel">
+            <h2>Who rides into town?</h2>
+            <label class="field">Your name
+              <input id="name-input" type="text" maxlength="14" autocomplete="off" spellcheck="false" placeholder="Player">
+            </label>
+            <div class="avatars">
+              <button type="button" class="avatar" data-avatar="cowboy" data-mood="happy"><span class="avatar-art"></span><span class="avatar-name">Cowboy</span></button>
+              <button type="button" class="avatar" data-avatar="cowgirl" data-mood="happy"><span class="avatar-art"></span><span class="avatar-name">Cowgirl</span></button>
+            </div>
+            <p class="warn" id="create-warn" hidden>Starting over erases your current journey.</p>
+            <button class="btn btn-next" id="btn-create" type="button"><span class="lbl">Ride into town</span></button>
+            <button class="link-btn" id="btn-create-cancel" type="button">Back</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= town -->
+      <section id="screen-town" class="screen" hidden>
+        <div class="scene" id="town-scene"></div>
+        <div id="buildings"></div>
+
+        <div class="plaque plaque-hud" id="town-me">
+          <div class="portrait" id="town-portrait" data-mood="neutral"></div>
+          <div class="plaque-text"><div class="name" id="town-name"></div><div class="chips" id="town-money"></div></div>
+        </div>
+        <div class="sign town-sign">Dusty Gulch</div>
+        <button class="mini-btn" id="btn-town-menu" type="button">Main menu</button>
+
+        <div id="saloon-panel" class="overlay" hidden>
+          <div class="panel">
+            <h2 id="sp-name"></h2>
+            <p class="tagline" id="sp-info"></p>
+            <div class="sp-cast" id="sp-cast"></div>
+            <div class="prizes" id="sp-prizes"></div>
+            <p class="tagline" id="sp-best"></p>
+            <button class="btn btn-next" id="btn-enter" type="button"><span class="lbl">Take a seat</span></button>
+            <button class="link-btn" id="btn-sp-close" type="button">Back to town</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= shop -->
+      <section id="screen-shop" class="screen" hidden>
+        <div class="shop-wall"></div>
+        <div class="sign shop-sign">Clothing Shop</div>
+        <button class="mini-btn" id="btn-shop-back" type="button">Back to town</button>
+
+        <div class="shop-mirror">
+          <div class="shop-char" id="shop-char" data-mood="happy"></div>
+          <div class="shop-wearing" id="shop-wearing"></div>
+        </div>
+        <div class="plaque plaque-hud shop-money"><div class="plaque-text"><div class="name">Your money</div><div class="chips" id="shop-money"></div></div></div>
+
+        <div class="shop-rack">
+          <div class="tabs" id="shop-tabs"></div>
+          <div class="items" id="shop-items"></div>
+        </div>
+      </section>
+
+      <!-- ================================================================ table -->
+      <section id="screen-table" class="screen" hidden>
+        <div class="scene" id="room-scene"></div>
+        <div class="room-light"></div>
+        <div class="rug"></div>
+
+        <div id="hud" class="sign">
+          <div id="hud-saloon"></div>
+          <div id="hud-hand"></div>
+          <div id="hud-left"></div>
+        </div>
+        <button id="btn-leave" class="mini-btn" type="button">Leave table</button>
+
+        <div id="table"><div class="felt"><div class="felt-line"></div></div></div>
+
+        <div id="board" class="cards"></div>
+        <div id="pot" class="pot"><span class="pot-chips"></span><span class="pot-label">POT</span><span id="pot-amount">$0</span></div>
+        <div id="banner" class="banner"><div id="banner-main"></div><div id="banner-sub"></div></div>
+        <div id="dealer" class="dealer off" title="Dealer button">D</div>
+
+        <!-- Seats (busts, plaques, cards, bets, bubbles) are added here by table.js. -->
+
+        <div id="fx"></div>
+
+        <div id="actionbar">
+          <div id="actions" class="bar-row">
+            <button class="btn btn-fold" data-act="fold" type="button" disabled><span class="lbl">Fold</span><kbd>F</kbd></button>
+            <button class="btn btn-check" data-act="check" type="button" disabled><span class="lbl">Check</span><kbd>C</kbd></button>
+            <button class="btn btn-call" data-act="call" type="button" disabled><span class="lbl">Call</span><span class="amt" id="call-amt"></span><kbd>C</kbd></button>
+            <div id="raisebox" class="raisebox off">
+              <div class="presets">
+                <button type="button" data-preset="min">Min</button>
+                <button type="button" data-preset="half">½ Pot</button>
+                <button type="button" data-preset="pot">Pot</button>
+              </div>
+              <div class="slider-row">
+                <button type="button" class="step" id="step-down" aria-label="Lower amount">−</button>
+                <input type="range" id="slider" min="0" max="1000" value="0" aria-label="Bet amount">
+                <button type="button" class="step" id="step-up" aria-label="Raise amount">+</button>
+              </div>
+            </div>
+            <button class="btn btn-raise" data-act="raise" type="button" disabled><span class="lbl" id="raise-lbl">Bet</span><span class="amt" id="raise-amt"></span><kbd>R</kbd></button>
+            <button class="btn btn-allin" data-act="allin" type="button" disabled><span class="lbl">All-in</span><span class="amt" id="allin-amt"></span><kbd>A</kbd></button>
+          </div>
+        </div>
+
+        <div id="leave-panel" class="overlay" hidden>
+          <div class="panel">
+            <h2>Leave the table?</h2>
+            <p class="tagline">Walking out now forfeits this game. You keep everything you've already won.</p>
+            <button class="btn btn-fold" id="btn-leave-yes" type="button"><span class="lbl">Leave</span></button>
+            <button class="link-btn" id="btn-leave-no" type="button">Keep playing</button>
+          </div>
+        </div>
+
+        <div id="result" class="overlay" hidden>
+          <div class="panel">
+            <div class="result-medal" id="result-medal"></div>
+            <h2 id="result-title"></h2>
+            <p class="tagline" id="result-sub"></p>
+            <div class="result-prize" id="result-prize"></div>
+            <p class="result-note" id="result-note"></p>
+            <button class="btn btn-next" id="btn-result-town" type="button"><span class="lbl">Back to town</span></button>
+            <button class="link-btn" id="btn-result-again" type="button">Play this saloon again</button>
+          </div>
+        </div>
+
+        <div id="victory" class="overlay victory" hidden>
+          <div class="confetti" id="confetti"></div>
+          <div class="panel">
+            <div class="victory-char" id="victory-char" data-mood="happy"></div>
+            <h1>Champion of the West!</h1>
+            <p class="tagline" id="victory-text"></p>
+            <div class="result-prize" id="victory-prize"></div>
+            <button class="btn btn-next" id="btn-victory" type="button"><span class="lbl">The end</span></button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
